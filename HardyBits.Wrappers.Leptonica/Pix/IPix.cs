@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace HardyBits.Wrappers.Leptonica
+namespace HardyBits.Wrappers.Leptonica.Pix
 {
   public interface IPix : IDisposable
   {

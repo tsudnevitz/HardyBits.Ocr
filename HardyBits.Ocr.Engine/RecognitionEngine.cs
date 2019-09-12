@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using HardyBits.Wrappers.Leptonica;
+using HardyBits.Wrappers.Leptonica.Pix;
 using HardyBits.Wrappers.Tesseract;
 using HardyBits.Wrappers.Tesseract.Constants;
 using HardyBits.Wrappers.Tesseract.Enums;
@@ -86,7 +86,7 @@ namespace HardyBits.Ocr.Engine
         var pageNumber = 0;
         var pixes = _pixFactory.Create(data.Data).ToArray();
         return pixes.Select(x => new Page<IPix>(pageNumber++, pixes.Length, x));
-      }, new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 10 });
+      });
 
       ISourceBlock<Page<IPix>> previousBlock = formatRecognitionBlock;
       foreach (var configuration in config.Preprocessors)
@@ -94,7 +94,8 @@ namespace HardyBits.Ocr.Engine
         var preprocessor = _preprocessorFactory.Create(configuration);
 
         var transformBlock = new TransformBlock<Page<IPix>, Page<IPix>>(
-          page => page.ChangePayload(preprocessor.Run(page.Payload), dispose:true));
+          page => page.ChangePayload(preprocessor.Run(page.Payload), dispose:true),
+          new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 10 });
 
         previousBlock.LinkTo(transformBlock);
         previousBlock = transformBlock;
@@ -111,7 +112,7 @@ namespace HardyBits.Ocr.Engine
         var newPage = page.CloneWithNewPayload(result);
         page.Dispose();
         return newPage;
-      });
+      }, new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 10 });
 
       _cancellation.Token.ThrowIfCancellationRequested();
       var tcs = new TaskCompletionSource<IRecognitionResults>();
@@ -121,6 +122,7 @@ namespace HardyBits.Ocr.Engine
       var pages = new ConcurrentDictionary<int, IRecognitionResult>();
       var bufferBlock = new ActionBlock<Page<IRecognitionResult>>(page =>
       {
+        Console.WriteLine($"Buffer page {page.CurrentPage}.");
         pages.AddOrUpdate(page.CurrentPage, page.Payload,
           (key, __) => throw new InvalidOperationException($"Tried to insert duplicated key {key}."));
 
@@ -129,7 +131,7 @@ namespace HardyBits.Ocr.Engine
 
         var results = new RecognitionResults(pages.Values);
         tcs.SetResult(results);
-      });
+      }, new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 10 });
 
       recognitionBlock.LinkTo(bufferBlock);
       _queueBlock.Post(async () =>

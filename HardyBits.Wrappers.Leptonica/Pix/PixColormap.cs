@@ -3,7 +3,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using HardyBits.Wrappers.Leptonica.Imports;
 
-namespace HardyBits.Wrappers.Leptonica
+namespace HardyBits.Wrappers.Leptonica.Pix
 {
   internal class PixColormap : IPixColormap
   {

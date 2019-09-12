@@ -1,4 +1,4 @@
-﻿using HardyBits.Wrappers.Leptonica;
+﻿using HardyBits.Wrappers.Leptonica.Pix;
 
 namespace HardyBits.Ocr.Engine
 {

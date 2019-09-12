@@ -85,10 +85,4 @@ namespace HardyBits.Wrappers.Leptonica.Imports
     [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixClone))]
     public static extern IntPtr pixClone(HandleRef pixs);
   }
-
-  internal static class Leptonica5Filters
-  {
-    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixFindSkewAndDeskew))]
-    public static extern IntPtr pixFindSkewAndDeskew(HandleRef pixs, int redsearch, out float pangle, out float pconf);
-  }
 }

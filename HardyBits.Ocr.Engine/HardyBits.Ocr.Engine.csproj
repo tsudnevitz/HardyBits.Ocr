@@ -15,4 +15,8 @@
     <ProjectReference Include="..\HardyBits.Wrappers.Tesseract\HardyBits.Wrappers.Tesseract.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="FileIO\" />
+  </ItemGroup>
+
 </Project>

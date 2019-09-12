@@ -25,7 +25,7 @@ namespace HardyBits.Ocr.Samples.Console
         public string Type { get; } = "tesseract4";
         public IParameterCollection Parameters { get; } = new ParameterCollection
         {
-          {"language", ParameterValue.Create("eng")},
+          {"language", ParameterValue.Create("pol")},
           {"mode", ParameterValue.Create("Default")},
           {"tessdata", ParameterValue.Create($@"{Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}\libs\tessdata")}
         };
@@ -59,8 +59,6 @@ namespace HardyBits.Ocr.Samples.Console
       foreach (var page in result)
       {
         System.Console.WriteLine(page.Text);
-        System.Console.WriteLine(page.HocrText);
-        System.Console.WriteLine(page.Confidence);
       }
 
       System.Console.ReadLine();

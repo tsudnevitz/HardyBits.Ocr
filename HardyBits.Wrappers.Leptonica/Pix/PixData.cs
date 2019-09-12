@@ -1,7 +1,7 @@
 ﻿using System;
 using HardyBits.Wrappers.Leptonica.Imports;
 
-namespace HardyBits.Wrappers.Leptonica
+namespace HardyBits.Wrappers.Leptonica.Pix
 {
   internal class PixData : IPixData
   {

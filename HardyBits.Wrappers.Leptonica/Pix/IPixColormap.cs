@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HardyBits.Wrappers.Leptonica
+namespace HardyBits.Wrappers.Leptonica.Pix
 {
   public interface IPixColormap : IDisposable
   {
