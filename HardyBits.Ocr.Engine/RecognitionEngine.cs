@@ -45,9 +45,6 @@ namespace HardyBits.Ocr.Engine
       _queueBlock = new ActionBlock<Action>(action => action(), execOptions);
     }
 
-    public int ActiveProcessesCount => _activeProcessesCount;
-    public int WaitingProcessesCount => _queueBlock.InputCount;
-
     private bool IsEngineConfigurationSupported(IEngineConfiguration config)
     {
       if (config == null)
@@ -68,7 +65,7 @@ namespace HardyBits.Ocr.Engine
       return true;
     }
 
-    public async Task<IRecognitionResults> RecognizeAsync(IRecognitionConfiguration config)
+    public async Task<IRecognitionResults> RecognizeAsync(IRecognitionConfiguration config, bool isAsync = true)
     {
       if (config == null)
         throw new ArgumentNullException(nameof(config));
@@ -77,6 +74,11 @@ namespace HardyBits.Ocr.Engine
         throw new InvalidOperationException("Engine configuration not supported.");
 
       return await RunProcessAsync(config);
+    }
+
+    public IRecognitionResults Recognize(IRecognitionConfiguration config, bool isAsync = false)
+    {
+      throw new NotImplementedException();
     }
 
     private async Task<IRecognitionResults> RunProcessAsync(IRecognitionConfiguration config)
