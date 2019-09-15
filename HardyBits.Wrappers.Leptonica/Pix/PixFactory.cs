@@ -38,7 +38,23 @@ namespace HardyBits.Wrappers.Leptonica.Pix
 
     public IEnumerable<IPix> Create(string imageFilePath)
     {
-      return new[] {new Pix(imageFilePath)};
+      if (Leptonica5Pix.findFileFormat(imageFilePath, out var format) != 0)
+        throw new InvalidOperationException("File format not supported.");
+
+      switch (format)
+      {
+        case ImageFileFormat.Default:
+        case ImageFileFormat.Tiff:
+        case ImageFileFormat.TiffPackbits:
+        case ImageFileFormat.TiffRle:
+        case ImageFileFormat.TiffG3:
+        case ImageFileFormat.TiffG4:
+        case ImageFileFormat.TiffLzw:
+        case ImageFileFormat.TiffZip:
+          return ReadTiff(imageFilePath);
+        default:
+          return new []{ReadImage(imageFilePath)};
+      }
     }
 
     private static unsafe IPix ReadImage(void* pointer, int size)
@@ -47,10 +63,26 @@ namespace HardyBits.Wrappers.Leptonica.Pix
       return new Pix(pixPointer);
     }
 
-    private static unsafe IEnumerable<IPix> ReadTiff(void* pointer, int size)
+    private static IPix ReadImage(string filename)
     {
-      var pixaPointer = Leptonica5Pix.pixaReadMemMultipageTiff(pointer, size).GetPointerOrThrow();
+      var pixPointer = Leptonica5Pix.pixRead(filename).GetPointerOrThrow();
+      return new Pix(pixPointer);
+    }
 
+    private static IEnumerable<IPix> ReadTiff(string filename)
+    {
+      var pointer = Leptonica5Pix.pixaReadMultipageTiff(filename).GetPointerOrThrow();
+      return ReadTiff(pointer);
+    }
+
+    private static unsafe IEnumerable<IPix> ReadTiff(void* nativePointer, int size)
+    {
+      var pointer = Leptonica5Pix.pixaReadMemMultipageTiff(nativePointer, size).GetPointerOrThrow();
+      return ReadTiff(pointer);
+    }
+
+    private static IEnumerable<IPix> ReadTiff(IntPtr pixaPointer)
+    {
       try
       {
         var pagesCount = Leptonica5Pix.pixaGetCount(pixaPointer);

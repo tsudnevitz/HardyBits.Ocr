@@ -1,4 +1,4 @@
-﻿namespace HardyBits.Ocr.Engine
+﻿namespace HardyBits.Ocr.Engine.Common
 {
   public interface IHaveType
   {

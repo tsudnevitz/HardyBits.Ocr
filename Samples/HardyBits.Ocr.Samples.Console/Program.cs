@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using HardyBits.Ocr.Engine;
+using HardyBits.Ocr.Engine.Configuration;
+using HardyBits.Wrappers.Tesseract.Enums;
 
 namespace HardyBits.Ocr.Samples.Console
 {
@@ -17,7 +19,7 @@ namespace HardyBits.Ocr.Samples.Console
         public string Name { get; } = "multipage_tif_example";
         public string Extension { get; } = "tif";
         public string MimeType { get; } = "image/tiff";
-        public ReadOnlyMemory<byte> Data { get; } = File.ReadAllBytes("testfile.jpg");
+        public ReadOnlyMemory<byte> Data { get; } = File.ReadAllBytes("ZLECGO_1_SKMBT_C22019091110540.pdf");
       }
 
       private class EngineConfiguration : IEngineConfiguration
@@ -29,6 +31,10 @@ namespace HardyBits.Ocr.Samples.Console
           {"mode", ParameterValue.Create("Default")},
           {"tessdata", ParameterValue.Create($@"{Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}\libs\tessdata")}
         };
+
+        public string TessData => Parameters.GetValue<string>("tessdata");
+        public EngineMode EngineMode => Parameters.GetValue<EngineMode>("mode");
+        public string Language => Parameters.GetValue<string>("language");
       }
 
       private class PreprocessorConfiguration : IPreprocessorConfiguration
@@ -52,7 +58,7 @@ namespace HardyBits.Ocr.Samples.Console
 
     public static async Task Main()
     {
-      using var engine = new RecognitionEngine();
+      using var engine = new ImageRecognitionEngine();
       var config = new RecognitionConfiguration();
       var result = await engine.RecognizeAsync(config);
 

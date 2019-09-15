@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HardyBits.Ocr.Engine
+namespace HardyBits.Ocr.Engine.Validation
 {
   public class ValidationProblem
   {

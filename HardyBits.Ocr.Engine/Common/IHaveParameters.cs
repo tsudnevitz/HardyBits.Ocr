@@ -1,4 +1,6 @@
-﻿namespace HardyBits.Ocr.Engine
+﻿using HardyBits.Ocr.Engine.Configuration;
+
+namespace HardyBits.Ocr.Engine.Common
 {
   public interface IHaveParameters
   {

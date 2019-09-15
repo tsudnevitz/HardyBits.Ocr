@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace HardyBits.Ocr.Engine
+namespace HardyBits.Ocr.Engine.Validation
 {
   public interface IValidationResult : IReadOnlyCollection<ValidationProblem>
   {

@@ -1,6 +1,6 @@
 ﻿using HardyBits.Wrappers.Leptonica.Pix;
 
-namespace HardyBits.Ocr.Engine
+namespace HardyBits.Ocr.Engine.Preporcessing
 {
   public interface IPreprocessor
   {

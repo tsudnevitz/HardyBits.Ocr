@@ -70,6 +70,9 @@ namespace HardyBits.Wrappers.Leptonica.Imports
     [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixaReadMemMultipageTiff))]
     public static extern unsafe IntPtr pixaReadMemMultipageTiff(void* data, int size);
     
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixaReadMultipageTiff))]
+    public static extern unsafe IntPtr pixaReadMultipageTiff(string filename);
+    
     [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixReadMem))]
     public static extern unsafe IntPtr pixReadMem(void* data, int size);
     

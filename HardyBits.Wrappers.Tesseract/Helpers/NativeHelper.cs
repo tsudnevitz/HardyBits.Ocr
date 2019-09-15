@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 
 namespace HardyBits.Wrappers.Tesseract.Helpers
@@ -11,6 +12,7 @@ namespace HardyBits.Wrappers.Tesseract.Helpers
       return new string((sbyte*) handle.ToPointer(), 0, length, encoding);
     }
 
+    [DebuggerStepThrough]
     public static int GetNativeStringLength(IntPtr handle)
     {
       var ptr = (byte*) handle.ToPointer();

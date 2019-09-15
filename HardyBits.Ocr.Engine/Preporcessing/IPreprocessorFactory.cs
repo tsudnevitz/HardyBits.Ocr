@@ -1,8 +1,9 @@
 ﻿using System;
+using HardyBits.Ocr.Engine.Configuration;
 using HardyBits.Wrappers.Leptonica.Filters;
 using HardyBits.Wrappers.Leptonica.Pix;
 
-namespace HardyBits.Ocr.Engine
+namespace HardyBits.Ocr.Engine.Preporcessing
 {
   public interface IPreprocessorFactory
   {

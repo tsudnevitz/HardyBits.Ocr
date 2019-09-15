@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using HardyBits.Ocr.Engine.Configuration;
+using HardyBits.Ocr.Engine.Preporcessing;
 using HardyBits.Wrappers.Leptonica.Pix;
 using HardyBits.Wrappers.Tesseract;
 using HardyBits.Wrappers.Tesseract.Constants;

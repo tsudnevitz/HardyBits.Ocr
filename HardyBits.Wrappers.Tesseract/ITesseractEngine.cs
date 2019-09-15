@@ -1,5 +1,5 @@
 ﻿using System;
-using HardyBits.Wrappers.Leptonica;
+using System.Threading.Tasks;
 using HardyBits.Wrappers.Leptonica.Pix;
 using HardyBits.Wrappers.Tesseract.Results;
 
