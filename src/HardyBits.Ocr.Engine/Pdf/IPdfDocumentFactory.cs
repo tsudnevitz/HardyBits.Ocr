@@ -1,4 +1,4 @@
-﻿using PdfSharp.Pdf;
+﻿using PdfSharpCore.Pdf;
 
 namespace HardyBits.Ocr.Engine.Pdf
 {

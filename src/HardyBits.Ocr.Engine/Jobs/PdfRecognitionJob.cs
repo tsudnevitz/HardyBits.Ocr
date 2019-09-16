@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using HardyBits.Ocr.Engine.Configuration;
@@ -9,8 +8,8 @@ using HardyBits.Ocr.Engine.Pdf;
 using HardyBits.Wrappers.Leptonica.Pix;
 using HardyBits.Wrappers.Tesseract;
 using HardyBits.Wrappers.Tesseract.Results;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.Advanced;
+using PdfSharpCore.Pdf;
+using PdfSharpCore.Pdf.Advanced;
 
 namespace HardyBits.Ocr.Engine.Jobs
 {

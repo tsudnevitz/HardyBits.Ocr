@@ -1,6 +1,6 @@
 ﻿using System;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
+using PdfSharpCore.Pdf;
+using PdfSharpCore.Pdf.IO;
 
 namespace HardyBits.Ocr.Engine.Pdf
 {

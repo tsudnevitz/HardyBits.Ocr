@@ -16,10 +16,10 @@ namespace HardyBits.Ocr.Samples.Console
     {
       private class ImageData : IImageData
       {
-        public string Name { get; } = "multipage_tif_example";
-        public string Extension { get; } = "tif";
+        public string Name { get; } = "sample_scanned";
+        public string Extension { get; } = ".tif";
         public string MimeType { get; } = "image/tiff";
-        public ReadOnlyMemory<byte> Data { get; } = File.ReadAllBytes("testfile.jpg");
+        public ReadOnlyMemory<byte> Data { get; } = File.ReadAllBytes(@"Smaples\sample_scanned.tif");
       }
 
       private class EngineConfiguration : IEngineConfiguration

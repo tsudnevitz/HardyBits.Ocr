@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using HardyBits.Ocr.Engine.IO;
 using HardyBits.Wrappers.Tesseract.Results;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Content;
-using PdfSharp.Pdf.Content.Objects;
+using PdfSharpCore.Pdf;
+using PdfSharpCore.Pdf.Advanced;
+using PdfSharpCore.Pdf.Content;
+using PdfSharpCore.Pdf.Content.Objects;
 
 namespace HardyBits.Ocr.Engine.Pdf
 {
