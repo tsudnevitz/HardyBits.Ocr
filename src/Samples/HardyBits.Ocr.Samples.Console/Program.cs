@@ -39,8 +39,7 @@ namespace HardyBits.Ocr.Samples.Console
 
       private class PreprocessorConfiguration : IPreprocessorConfiguration
       {
-        public string Type { get; } = "Any";
-        public string Method { get; } = "Any";
+        public string Type { get; } = "HeavyLift";
         public IParameterCollection Parameters { get; } = new ParameterCollection();
       }
 

@@ -105,5 +105,8 @@ namespace HardyBits.Wrappers.Leptonica.Imports
     
     [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(boxaAddBox))]
     public static extern int boxaAddBox(IntPtr boxa, IntPtr box, int copyflag);
+
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(boxDestroy))]
+    public static extern void boxDestroy(ref IntPtr pboxa);
   }
 }
