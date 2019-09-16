@@ -19,7 +19,7 @@ namespace HardyBits.Ocr.Samples.Console
         public string Name { get; } = "sample_photo_1_side";
         public string Extension { get; } = ".jpg";
         public string MimeType { get; } = "image/jpeg";
-        public ReadOnlyMemory<byte> Data { get; } = File.ReadAllBytes(@"Samples\sample_scanned_1.jpg");
+        public ReadOnlyMemory<byte> Data { get; } = File.ReadAllBytes(@"Samples\sample_photo_1_side.jpg");
       }
 
       private class EngineConfiguration : IEngineConfiguration

@@ -35,10 +35,22 @@ namespace HardyBits.Wrappers.Leptonica.Filters
       if (pix == null)
         throw new ArgumentNullException(nameof(pix));
 
-      var boxPtr = Leptonica5Filters.pixFindPageForeground(pix.Handle, 128, 1, 1, 0, IntPtr.Zero);
-      var clipped = new HandleRef(this, Leptonica5Filters.pixClipRectangle(pix.Handle, new HandleRef(this, boxPtr), IntPtr.Zero));
-      var pix1bpp = new HandleRef(this, Leptonica5Filters.pixPrepare1bpp(clipped, null, 0, 0));
-      var oriented = new HandleRef(this, Leptonica5Filters.pixOrientCorrect(pix1bpp, 4f, 2.5f, out _, out _, out _, 0));
+      var pixa = new Pixa();
+      pixa.AddPix(pix);
+
+      float angle = 0, confidence = 0;
+      //var boxPtr = Leptonica5Filters.pixFindPageForeground(pix.Handle, 128, 1, 1, 0, IntPtr.Zero);
+      //var clipped = new HandleRef(this, Leptonica5Filters.pixClipRectangle(pix.Handle, new HandleRef(this, boxPtr), IntPtr.Zero));
+      //pixa.AddPix(clipped.Handle);
+      var pix1bpp = new HandleRef(this, Leptonica5Filters.pixPrepare1bpp(pix.Handle, null, 0, 0));
+      pixa.AddPix(pix1bpp.Handle);
+      var deskewed = new HandleRef(this, Leptonica5Filters.pixFindSkewAndDeskew(pix1bpp, 4, out angle, out confidence));
+      pixa.AddPix(deskewed.Handle);
+      var oriented = new HandleRef(this, Leptonica5Filters.pixOrientCorrect(deskewed, 4f, 2.5f, out _, out _, out _, 0));
+      pixa.AddPix(oriented.Handle);
+
+      Leptonica5Pix.pixaWriteMultipageTiff("changed.tif", pixa.HandleRef.Handle);
+      Start("changed.tif");
 
       //var deskewed2 = new HandleRef(this, Leptonica5Filters.pixFindSkewAndDeskew(oriented, 0, out var angle, out var confidence));
 

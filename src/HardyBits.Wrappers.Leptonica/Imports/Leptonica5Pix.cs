@@ -81,11 +81,20 @@ namespace HardyBits.Wrappers.Leptonica.Imports
     
     [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixaGetPix))]
     public static extern IntPtr pixaGetPix(IntPtr pixa, int index, int accesstype);
+
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixClone))]
+    public static extern IntPtr pixClone(HandleRef pixs);
+
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixaCreate))]
+    public static extern IntPtr pixaCreate(int n);
     
     [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixaDestroy))]
     public static extern void pixaDestroy(ref IntPtr pix);
 
-    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixClone))]
-    public static extern IntPtr pixClone(HandleRef pixs);
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixaAddPix))]
+    public static extern int pixaAddPix(IntPtr pixa, IntPtr pix, int copyflag);
+
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixaWriteMultipageTiff))]
+    public static extern int pixaWriteMultipageTiff(string fname, IntPtr pixa);
   }
 }
