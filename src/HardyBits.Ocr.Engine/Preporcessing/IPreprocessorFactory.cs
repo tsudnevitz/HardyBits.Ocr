@@ -25,12 +25,13 @@ namespace HardyBits.Ocr.Engine.Preporcessing
 
     public IPreprocessor Create(IPreprocessorConfiguration config)
     {
-      return new DelegatePreprocessor(pix =>
-      {
+      return new CloningPreprocessor();
+      //return new DelegatePreprocessor(pix =>
+      //{
         //using var pix1 = _filters.Deskew(pix, 4).Pix;
         //return _filters.FixOrientation(pix1).Pix;
-        return _filters.Test(pix).Pix;
-      });
+        //return _filters.Test(pix).Pix;
+      //});
     }
   }
 
