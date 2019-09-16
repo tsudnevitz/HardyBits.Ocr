@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using HardyBits.Ocr.Engine.IO;
 using HardyBits.Ocr.Engine.Pdf;
 using HardyBits.Ocr.Engine.Preprocessing;
-using HardyBits.Wrappers.Leptonica.Pix;
+using HardyBits.Wrappers.Leptonica.Internals;
 using HardyBits.Wrappers.Tesseract.Factories;
 
 namespace HardyBits.Ocr.Engine.Jobs

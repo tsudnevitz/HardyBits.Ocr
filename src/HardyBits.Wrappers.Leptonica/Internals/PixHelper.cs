@@ -2,7 +2,7 @@
 using HardyBits.Wrappers.Leptonica.Enums;
 using HardyBits.Wrappers.Leptonica.Imports;
 
-namespace HardyBits.Wrappers.Leptonica.Pix
+namespace HardyBits.Wrappers.Leptonica.Internals
 {
   public unsafe class PixHelper : IPixHelper
   {

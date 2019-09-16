@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using HardyBits.Wrappers.Leptonica.Enums;
-using HardyBits.Wrappers.Leptonica.Pix;
+using HardyBits.Wrappers.Leptonica.Internals;
 
 namespace HardyBits.Ocr.Engine.IO
 {

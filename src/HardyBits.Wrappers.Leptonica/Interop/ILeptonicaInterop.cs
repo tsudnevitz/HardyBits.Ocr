@@ -1,7 +1,7 @@
 ﻿using HardyBits.Wrappers.Leptonica.Enums;
-using HardyBits.Wrappers.Leptonica.Pix;
+using HardyBits.Wrappers.Leptonica.Internals;
 
-namespace HardyBits.Wrappers.Leptonica.Filters
+namespace HardyBits.Wrappers.Leptonica.Interop
 {
   public interface ILeptonicaInterop
   {

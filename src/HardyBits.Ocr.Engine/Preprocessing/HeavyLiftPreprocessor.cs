@@ -1,7 +1,7 @@
 ﻿using System;
 using HardyBits.Wrappers.Leptonica.Enums;
-using HardyBits.Wrappers.Leptonica.Filters;
-using HardyBits.Wrappers.Leptonica.Pix;
+using HardyBits.Wrappers.Leptonica.Internals;
+using HardyBits.Wrappers.Leptonica.Interop;
 
 namespace HardyBits.Ocr.Engine.Preprocessing
 {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace HardyBits.Wrappers.Leptonica.Pix
+namespace HardyBits.Wrappers.Leptonica.Internals
 {
-  public interface IBox : IDisposable
+  public interface ILeptonicaObject : IDisposable
   {
     HandleRef HandleRef { get; }
   }

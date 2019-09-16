@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HardyBits.Wrappers.Leptonica.Pix
+namespace HardyBits.Wrappers.Leptonica.Internals
 {
   public interface IPixData
   {

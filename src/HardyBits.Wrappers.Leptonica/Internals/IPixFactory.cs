@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HardyBits.Wrappers.Leptonica.Pix
+namespace HardyBits.Wrappers.Leptonica.Internals
 {
   public interface IPixFactory
   {

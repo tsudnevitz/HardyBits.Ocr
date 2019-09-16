@@ -1,5 +1,5 @@
 ﻿using HardyBits.Ocr.Engine.Common;
-using HardyBits.Wrappers.Leptonica.Pix;
+using HardyBits.Wrappers.Leptonica.Internals;
 
 namespace HardyBits.Ocr.Engine.Preprocessing
 {

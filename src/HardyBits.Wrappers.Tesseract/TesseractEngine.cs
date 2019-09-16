@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using HardyBits.Wrappers.Leptonica.Pix;
+using HardyBits.Wrappers.Leptonica.Internals;
 using HardyBits.Wrappers.Tesseract.Constants;
 using HardyBits.Wrappers.Tesseract.Enums;
 using HardyBits.Wrappers.Tesseract.Exceptions;

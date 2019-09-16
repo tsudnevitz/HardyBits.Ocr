@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using HardyBits.Ocr.Engine.Configuration;
-using HardyBits.Wrappers.Leptonica.Filters;
+using HardyBits.Wrappers.Leptonica.Interop;
 
 namespace HardyBits.Ocr.Engine.Preprocessing
 {

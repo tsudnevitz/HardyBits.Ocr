@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using HardyBits.Wrappers.Leptonica.Imports;
+using HardyBits.Wrappers.Leptonica.Extensions;
 
-namespace HardyBits.Wrappers.Leptonica.Pix
+namespace HardyBits.Wrappers.Leptonica.Internals
 {
-  public class Box : IBox
+  internal abstract class LeptonicaObjectBase : ILeptonicaObject
   {
-    public Box(IntPtr pointer)
+    protected LeptonicaObjectBase(Func<IntPtr> creator)
+    {
+      if (creator == null)
+        throw new ArgumentNullException(nameof(creator));
+
+      HandleRef = creator().GetHandleOrThrow(this);
+    }
+
+    protected LeptonicaObjectBase(IntPtr pointer)
     {
       if (pointer == null)
         throw new ArgumentNullException(nameof(pointer));
@@ -16,6 +24,8 @@ namespace HardyBits.Wrappers.Leptonica.Pix
 
     public HandleRef HandleRef { get; private set; }
 
+    protected abstract void DestroyObject(ref IntPtr pointer);
+
     private void ReleaseUnmanagedResources()
     {
       if (HandleRef.Handle == IntPtr.Zero)
@@ -23,16 +33,16 @@ namespace HardyBits.Wrappers.Leptonica.Pix
 
       var pointer = HandleRef.Handle;
       HandleRef = new HandleRef();
-      Leptonica5Pix.boxDestroy(ref pointer);
+      DestroyObject(ref pointer);
     }
 
-    public void Dispose()
+    public virtual void Dispose()
     {
       ReleaseUnmanagedResources();
       GC.SuppressFinalize(this);
     }
 
-    ~Box()
+    ~LeptonicaObjectBase()
     {
       ReleaseUnmanagedResources();
     }

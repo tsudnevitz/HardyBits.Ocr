@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using HardyBits.Wrappers.Leptonica.Pix;
+using HardyBits.Wrappers.Leptonica.Internals;
 using HardyBits.Wrappers.Tesseract.Results;
 
 namespace HardyBits.Wrappers.Tesseract

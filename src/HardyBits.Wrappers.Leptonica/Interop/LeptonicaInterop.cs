@@ -2,9 +2,9 @@
 using HardyBits.Wrappers.Leptonica.Enums;
 using HardyBits.Wrappers.Leptonica.Extensions;
 using HardyBits.Wrappers.Leptonica.Imports;
-using HardyBits.Wrappers.Leptonica.Pix;
+using HardyBits.Wrappers.Leptonica.Internals;
 
-namespace HardyBits.Wrappers.Leptonica.Filters
+namespace HardyBits.Wrappers.Leptonica.Interop
 {
   public class LeptonicaInterop : ILeptonicaInterop
   {
@@ -14,7 +14,7 @@ namespace HardyBits.Wrappers.Leptonica.Filters
         throw new ArgumentNullException(nameof(pix));
 
       var pointer = Leptonica5Filters.pixDeskewBoth(pix.HandleRef.Handle, (int) searchReduction).GetPointerOrThrow();
-      return new Pix.Pix(pointer);
+      return new Pix(pointer);
     }
 
     public IPix PrepareOneBitPerPixel(IPix pix)
@@ -23,7 +23,7 @@ namespace HardyBits.Wrappers.Leptonica.Filters
         throw new ArgumentNullException(nameof(pix));
 
       var pointer = Leptonica5Filters.pixPrepare1bpp(pix.HandleRef.Handle, IntPtr.Zero, 0, 0).GetPointerOrThrow();
-      return new Pix.Pix(pointer);
+      return new Pix(pointer);
     }
 
     public IPix OrientationCorrect(IPix pix, float minUpConfidence = 4f, float minRatio = 2.5f)
@@ -32,7 +32,7 @@ namespace HardyBits.Wrappers.Leptonica.Filters
         throw new ArgumentNullException(nameof(pix));
 
       var pointer = Leptonica5Filters.pixOrientCorrect(pix.HandleRef.Handle, minUpConfidence, minRatio, out _, out _, out _, 0).GetPointerOrThrow();
-      return new Pix.Pix(pointer);
+      return new Pix(pointer);
     }
 
     public IBox FindPageForeground(IPix pix, int threshold = 128, int minDistance = 50, int eraseDistance = 70)
@@ -50,7 +50,7 @@ namespace HardyBits.Wrappers.Leptonica.Filters
         throw new ArgumentNullException(nameof(pix));
 
       var pointer = Leptonica5Filters.pixClipRectangle(pix.HandleRef.Handle, box.HandleRef.Handle, IntPtr.Zero).GetPointerOrThrow();
-      return new Pix.Pix(pointer);
+      return new Pix(pointer);
     }
   }
 }
