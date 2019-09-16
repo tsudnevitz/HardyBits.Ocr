@@ -10,7 +10,7 @@ namespace HardyBits.Wrappers.Leptonica.Pix
     int Depth { get; }
     int XRes { get; }
     int YRes { get; }
-    HandleRef Handle { get; }
+    HandleRef HandleRef { get; }
     IPix Clone();
   }
 }

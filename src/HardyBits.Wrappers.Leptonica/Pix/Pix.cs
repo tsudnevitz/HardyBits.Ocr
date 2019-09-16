@@ -21,7 +21,7 @@ namespace HardyBits.Wrappers.Leptonica.Pix
       if (imageHeight <= 0) 
         throw new ArgumentException("Height must be greater than zero", nameof(imageHeight));
 
-      Handle = Leptonica5Pix.pixCreate(imageWidth, imageHeight, imageDepth).GetHandleOrThrow(this);
+      HandleRef = Leptonica5Pix.pixCreate(imageWidth, imageHeight, imageDepth).GetHandleOrThrow(this);
       Width = imageWidth;
       Height = imageHeight;
       Depth = imageDepth;
@@ -32,18 +32,18 @@ namespace HardyBits.Wrappers.Leptonica.Pix
       if (imageFilePath == null)
         throw new ArgumentNullException(nameof(imageFilePath));
 
-      Handle = Leptonica5Pix.pixRead(imageFilePath).GetHandleOrThrow(this);
-      Width = Leptonica5Pix.pixGetWidth(Handle);
-      Height = Leptonica5Pix.pixGetHeight(Handle);
-      Depth = Leptonica5Pix.pixGetDepth(Handle);
+      HandleRef = Leptonica5Pix.pixRead(imageFilePath).GetHandleOrThrow(this);
+      Width = Leptonica5Pix.pixGetWidth(HandleRef);
+      Height = Leptonica5Pix.pixGetHeight(HandleRef);
+      Depth = Leptonica5Pix.pixGetDepth(HandleRef);
     }
 
     internal Pix(IntPtr pointer)
     {
-      Handle = pointer.GetHandleOrThrow(this);
-      Width = Leptonica5Pix.pixGetWidth(Handle);
-      Height = Leptonica5Pix.pixGetHeight(Handle);
-      Depth = Leptonica5Pix.pixGetDepth(Handle);
+      HandleRef = pointer.GetHandleOrThrow(this);
+      Width = Leptonica5Pix.pixGetWidth(HandleRef);
+      Height = Leptonica5Pix.pixGetHeight(HandleRef);
+      Depth = Leptonica5Pix.pixGetDepth(HandleRef);
     }
 
     public int Width { get; }
@@ -52,29 +52,29 @@ namespace HardyBits.Wrappers.Leptonica.Pix
 
     public int XRes 
     {
-      get => Leptonica5Pix.pixGetXRes(Handle);
-      private set => Leptonica5Pix.pixSetXRes(Handle, value);
+      get => Leptonica5Pix.pixGetXRes(HandleRef);
+      private set => Leptonica5Pix.pixSetXRes(HandleRef, value);
     }
 
     public int YRes
     {
-      get => Leptonica5Pix.pixGetYRes(Handle);
-      private set => Leptonica5Pix.pixSetYRes(Handle, value);
+      get => Leptonica5Pix.pixGetYRes(HandleRef);
+      private set => Leptonica5Pix.pixSetYRes(HandleRef, value);
     }
 
-    public HandleRef Handle { get; private set; }
+    public HandleRef HandleRef { get; private set; }
 
     public IPix Clone()
     {
-      var pointer = Leptonica5Pix.pixClone(Handle).GetPointerOrThrow();
+      var pointer = Leptonica5Pix.pixClone(HandleRef).GetPointerOrThrow();
       return new Pix(pointer);
     }
 
     private void ReleaseUnmanagedResources()
     {
-      var tmpHandle = Handle.Handle;
+      var tmpHandle = HandleRef.Handle;
       Leptonica5Pix.pixDestroy(ref tmpHandle);
-      Handle = new HandleRef(this, IntPtr.Zero);
+      HandleRef = new HandleRef(this, IntPtr.Zero);
     }
 
     public void Dispose()

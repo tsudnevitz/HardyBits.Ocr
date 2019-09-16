@@ -13,7 +13,10 @@ namespace HardyBits.Wrappers.Leptonica.Imports
     public static extern IntPtr pixOrientCorrect(HandleRef pixs, float minupconf, float minratio, out float pupconf, out float pleftconf, out int protation, int debug);
     
     [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixFindLargestRectangle))]
-    public static extern int pixFindLargestRectangle(HandleRef pixs, int polarity, out IntPtr pbox, IntPtr ppixdb);
+    public static extern int pixFindLargestRectangle(HandleRef pixs, int polarity, out IntPtr pbox, out IntPtr ppixdb);
+    
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixFindLargeRectangles))]
+    public static extern int pixFindLargeRectangles(IntPtr pixs, int polarity, int nrect, out IntPtr pboxa, out IntPtr ppixdb);
     
     [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixPrepare1bpp))]
     public static extern IntPtr pixPrepare1bpp(HandleRef pixs, void* box, float cropfract, int outres);
@@ -29,5 +32,14 @@ namespace HardyBits.Wrappers.Leptonica.Imports
     
     [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixFindPageForeground))]
     public static extern IntPtr pixFindPageForeground(HandleRef pixs, int threshold, int mindist, int erasedist, int showmorph, IntPtr pixac);
+    
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixDeskewBoth))]
+    public static extern IntPtr pixDeskewBoth(IntPtr pixs, int redsearch);
+
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixRotate))]
+    public static extern IntPtr pixRotate(IntPtr pixs, float angle, int type, int incolor, int width, int height);
+
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixPaintBoxa))]
+    public static extern IntPtr pixPaintBoxa(IntPtr pixs, IntPtr boxa, int val);
   }
 }

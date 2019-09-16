@@ -52,7 +52,7 @@ namespace HardyBits.Wrappers.Tesseract
       {
         const PageSegmentMode pageSegMode = PageSegmentMode.Auto;
         Tesseract4.TessBaseAPISetPageSegMode(_handle, (int) pageSegMode);
-        Tesseract4.TessBaseAPISetImage2(_handle, image.Handle);
+        Tesseract4.TessBaseAPISetImage2(_handle, image.HandleRef);
 
         if (Tesseract4.TessBaseAPIRecognize(_handle, out var rec) != 0)
           throw new TesseractException("Recognition of image failed.");

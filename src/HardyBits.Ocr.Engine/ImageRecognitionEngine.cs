@@ -5,7 +5,7 @@ using HardyBits.Ocr.Engine.Configuration;
 using HardyBits.Ocr.Engine.IO;
 using HardyBits.Ocr.Engine.Jobs;
 using HardyBits.Ocr.Engine.Pdf;
-using HardyBits.Ocr.Engine.Preporcessing;
+using HardyBits.Ocr.Engine.Preprocessing;
 using HardyBits.Wrappers.Leptonica.Pix;
 using HardyBits.Wrappers.Tesseract.Factories;
 using HardyBits.Wrappers.Tesseract.Results;
@@ -74,9 +74,9 @@ namespace HardyBits.Ocr.Engine
       return await job.ExecuteAsync();
     }
 
-    public IRecognitionResults Recognize(IRecognitionConfiguration config, bool isAsync = true)
+    public IRecognitionResults Recognize(IRecognitionConfiguration config, bool runParallel = true)
     {
-      return RecognizeAsync(config, isAsync)
+      return RecognizeAsync(config, runParallel)
         .ConfigureAwait(false)
         .GetAwaiter()
         .GetResult();

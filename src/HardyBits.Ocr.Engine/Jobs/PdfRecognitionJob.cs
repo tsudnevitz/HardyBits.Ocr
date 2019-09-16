@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HardyBits.Ocr.Engine.IO;
 using HardyBits.Ocr.Engine.Pdf;
-using HardyBits.Ocr.Engine.Preporcessing;
+using HardyBits.Ocr.Engine.Preprocessing;
 using HardyBits.Wrappers.Leptonica.Pix;
 using HardyBits.Wrappers.Tesseract.Factories;
 using HardyBits.Wrappers.Tesseract.Results;
@@ -50,12 +50,21 @@ namespace HardyBits.Ocr.Engine.Jobs
       var options = new ParallelOptions{ MaxDegreeOfParallelism = 10 };
       Parallel.ForEach(pixes, options, pix =>
       {
-        var engine = _engineFactory.Create();
-        var result = engine.Process(pix);
+        var preprocessedPix = Preprocess(pix);
+        using var engine = _engineFactory.Create();
+        var result = engine.Process(preprocessedPix);
         results.BlockingAdd(result);
       });
 
       return results;
+    }
+
+    private IPix Preprocess(IPix pix)
+    {
+      IPix result = null;
+      foreach (var preprocessor in _preprocessors)
+        result = preprocessor.Run(pix);
+      return result;
     }
 
     public IEnumerable<IStoredImageFile> ExtractImages(PdfDocument document)
@@ -118,7 +127,8 @@ namespace HardyBits.Ocr.Engine.Jobs
       if (pdfReference != null)
         obj = (object) pdfReference.Value;
       PdfName pdfName = obj as PdfName;
-      if (pdfName != (string) null)
+      string nullString = null;
+      if (pdfName != nullString)
         return pdfName.Value;
 
       if (obj is PdfNameObject pdfNameObject)

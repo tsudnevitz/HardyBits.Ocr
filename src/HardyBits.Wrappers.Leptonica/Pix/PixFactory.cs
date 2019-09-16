@@ -117,7 +117,7 @@ namespace HardyBits.Wrappers.Leptonica.Pix
     {
       foreach (var page in pages)
       {
-        var pointer = page.Handle.Handle;
+        var pointer = page.HandleRef.Handle;
         Leptonica5Pix.pixDestroy(ref pointer);
       }
     }

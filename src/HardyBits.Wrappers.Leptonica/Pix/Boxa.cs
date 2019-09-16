@@ -6,27 +6,18 @@ using HardyBits.Wrappers.Leptonica.Imports;
 
 namespace HardyBits.Wrappers.Leptonica.Pix
 {
-  public class Pixa : IDisposable
+  public class Boxa : IDisposable
   {
-    public Pixa(int initialPointersCount = 0)
+    public Boxa(int initialPointersCount = 0)
     {
-      HandleRef = Leptonica5Pix.pixaCreate(initialPointersCount).GetHandleOrThrow(this);
+      HandleRef = Leptonica5Pix.boxaCreate(initialPointersCount).GetHandleOrThrow(this);
     }
 
     public HandleRef HandleRef { get; private set; }
 
-    public void AddPix(IPix pix)
+    public void AddBox(IntPtr boxPointer)
     {
-      if (pix == null)
-        throw new ArgumentNullException(nameof(pix));
-
-      if (Leptonica5Pix.pixaAddPix(HandleRef.Handle, pix.HandleRef.Handle, 1) != 0)
-        throw new InvalidOperationException("Leptonica failed.");
-    }
-
-    public void AddPix(IntPtr pixPointer)
-    {
-      if (Leptonica5Pix.pixaAddPix(HandleRef.Handle, pixPointer, 1) != 0)
+      if (Leptonica5Pix.boxaAddBox(HandleRef.Handle, boxPointer, 0) != 0)
         throw new InvalidOperationException("Leptonica failed.");
     }
 
@@ -37,7 +28,7 @@ namespace HardyBits.Wrappers.Leptonica.Pix
 
       var pointer = HandleRef.Handle;
       HandleRef = new HandleRef();
-      Leptonica5Pix.pixaDestroy(ref pointer);
+      Leptonica5Pix.boxaDestroy(ref pointer);
     }
 
     public void Dispose()
@@ -46,7 +37,7 @@ namespace HardyBits.Wrappers.Leptonica.Pix
       GC.SuppressFinalize(this);
     }
 
-    ~Pixa()
+    ~Boxa()
     {
       ReleaseUnmanagedResources();
     }
