@@ -19,7 +19,7 @@ namespace HardyBits.Ocr.Samples.Console
         public string Name { get; } = "multipage_tif_example";
         public string Extension { get; } = "tif";
         public string MimeType { get; } = "image/tiff";
-        public ReadOnlyMemory<byte> Data { get; } = File.ReadAllBytes("ZLECGO_1_SKMBT_C22019091110540.pdf");
+        public ReadOnlyMemory<byte> Data { get; } = File.ReadAllBytes("testfile.jpg");
       }
 
       private class EngineConfiguration : IEngineConfiguration
