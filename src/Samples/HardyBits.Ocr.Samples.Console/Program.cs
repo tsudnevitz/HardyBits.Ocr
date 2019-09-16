@@ -19,7 +19,7 @@ namespace HardyBits.Ocr.Samples.Console
         public string Name { get; } = "sample_scanned";
         public string Extension { get; } = ".tif";
         public string MimeType { get; } = "image/tiff";
-        public ReadOnlyMemory<byte> Data { get; } = File.ReadAllBytes(@"Smaples\sample_scanned.tif");
+        public ReadOnlyMemory<byte> Data { get; } = File.ReadAllBytes(@"Samples\sample_scanned.tif");
       }
 
       private class EngineConfiguration : IEngineConfiguration
@@ -60,7 +60,7 @@ namespace HardyBits.Ocr.Samples.Console
     {
       using var engine = new ImageRecognitionEngine();
       var config = new RecognitionConfiguration();
-      var result = await engine.RecognizeAsync(config);
+      var result = await engine.RecognizeAsync(config, isAsync:false);
 
       foreach (var page in result)
       {
