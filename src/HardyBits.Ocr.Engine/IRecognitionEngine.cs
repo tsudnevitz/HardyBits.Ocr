@@ -7,7 +7,7 @@ namespace HardyBits.Ocr.Engine
 {
   public interface IRecognitionEngine : IDisposable
   {
-    Task<IRecognitionResults> RecognizeAsync(IRecognitionConfiguration config, bool isAsync = true);
+    Task<IRecognitionResults> RecognizeAsync(IRecognitionConfiguration config, bool runParallel = true);
     IRecognitionResults Recognize(IRecognitionConfiguration config, bool isAsync = true);
   }
 }

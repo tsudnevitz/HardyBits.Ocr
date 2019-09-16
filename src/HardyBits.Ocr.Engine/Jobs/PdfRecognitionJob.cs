@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HardyBits.Ocr.Engine.Configuration;
 using HardyBits.Ocr.Engine.IO;
 using HardyBits.Ocr.Engine.Pdf;
+using HardyBits.Ocr.Engine.Preporcessing;
 using HardyBits.Wrappers.Leptonica.Pix;
-using HardyBits.Wrappers.Tesseract;
+using HardyBits.Wrappers.Tesseract.Factories;
 using HardyBits.Wrappers.Tesseract.Results;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Pdf.Advanced;
@@ -15,26 +15,26 @@ namespace HardyBits.Ocr.Engine.Jobs
 {
   internal class PdfRecognitionJob : IRecognitionJob
   {
-    private readonly IEngineConfiguration _config;
     private readonly IPdfDocumentFactory _pdfDocumentFactory;
     private readonly IStoredImageFile _pdfFile;
-    private readonly ITesseractEngineFactory _tesseractFactory;
     private readonly IPixFactory _pixFactory;
     private readonly IImageFileStorage _storage;
+    private readonly IConfiguredTesseractEngineFactory _engineFactory;
+    private readonly IEnumerable<IPreprocessor> _preprocessors;
 
     public PdfRecognitionJob(
-      IEngineConfiguration config, 
+      IConfiguredTesseractEngineFactory engineFactory, 
       IStoredImageFile imageFile, 
+      IEnumerable<IPreprocessor> preprocessors,
       IPdfDocumentFactory pdfDocumentFactory, 
       IPixFactory pixFactory, 
-      ITesseractEngineFactory tesseractFactory, 
       IImageFileStorage storage)
     {
-      _config = config ?? throw new ArgumentNullException(nameof(config));
+      _engineFactory = engineFactory ?? throw new ArgumentNullException(nameof(engineFactory));
       _pdfFile = imageFile ?? throw new ArgumentNullException(nameof(imageFile));
+      _preprocessors = preprocessors ?? throw new ArgumentNullException(nameof(preprocessors));
       _pdfDocumentFactory = pdfDocumentFactory ?? throw new ArgumentNullException(nameof(pdfDocumentFactory));
       _pixFactory = pixFactory ?? throw new ArgumentNullException(nameof(pixFactory));
-      _tesseractFactory = tesseractFactory ?? throw new ArgumentNullException(nameof(tesseractFactory));
       _storage = storage ?? throw new ArgumentNullException(nameof(storage));
     }
     public async Task<IRecognitionResults> ExecuteAsync()
@@ -50,8 +50,8 @@ namespace HardyBits.Ocr.Engine.Jobs
       var options = new ParallelOptions{ MaxDegreeOfParallelism = 10 };
       Parallel.ForEach(pixes, options, pix =>
       {
-        using var tesseract = _tesseractFactory.Create(_config.TessData, _config.Language, _config.EngineMode);
-        var result = tesseract.Process(pix);
+        var engine = _engineFactory.Create();
+        var result = engine.Process(pix);
         results.BlockingAdd(result);
       });
 

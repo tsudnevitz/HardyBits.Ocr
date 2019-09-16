@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using HardyBits.Wrappers.Tesseract.Helpers;
@@ -6,6 +7,7 @@ using HardyBits.Wrappers.Tesseract.Imports;
 
 namespace HardyBits.Wrappers.Tesseract
 {
+  [DebuggerStepThrough]
   public class Text : IDisposable
   {
     private HandleRef _handle;

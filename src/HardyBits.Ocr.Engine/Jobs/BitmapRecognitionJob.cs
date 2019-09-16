@@ -1,42 +1,54 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using HardyBits.Ocr.Engine.Configuration;
 using HardyBits.Ocr.Engine.IO;
+using HardyBits.Ocr.Engine.Preporcessing;
 using HardyBits.Wrappers.Leptonica.Pix;
-using HardyBits.Wrappers.Tesseract;
+using HardyBits.Wrappers.Tesseract.Factories;
 using HardyBits.Wrappers.Tesseract.Results;
 
 namespace HardyBits.Ocr.Engine.Jobs
 {
   public class BitmapRecognitionJob : IRecognitionJob
   {
-    private readonly IEngineConfiguration _config;
     private readonly IStoredImageFile _imageFile;
-    private readonly ITesseractEngineFactory _tesseractFactory;
     private readonly IPixFactory _pixFactory;
+    private readonly IConfiguredTesseractEngineFactory _engineFactory;
+    private readonly IEnumerable<IPreprocessor> _preprocessors;
 
-    public BitmapRecognitionJob(IEngineConfiguration config, IStoredImageFile imageFile, IPixFactory pixFactory, ITesseractEngineFactory tesseractFactory)
+    public BitmapRecognitionJob(IConfiguredTesseractEngineFactory engineFactory, IStoredImageFile imageFile, IEnumerable<IPreprocessor> preprocessors, IPixFactory pixFactory)
     {
-      _config = config ?? throw new ArgumentNullException(nameof(config));
+      _engineFactory = engineFactory ?? throw new ArgumentNullException(nameof(engineFactory));
       _imageFile = imageFile ?? throw new ArgumentNullException(nameof(imageFile));
+      _preprocessors = preprocessors ?? throw new ArgumentNullException(nameof(preprocessors));
       _pixFactory = pixFactory ?? throw new ArgumentNullException(nameof(pixFactory));
-      _tesseractFactory = tesseractFactory ?? throw new ArgumentNullException(nameof(tesseractFactory));
     }
 
     public Task<IRecognitionResults> ExecuteAsync()
     {
+      // ToDo: preserve image order
+      // ToDo: make async
       var pixes = _pixFactory.Create(_imageFile.Path);
 
       var results = new RecognitionResults();
       var options = new ParallelOptions{ MaxDegreeOfParallelism = 10 };
       Parallel.ForEach(pixes, options, pix =>
       {
-        using var tesseract = _tesseractFactory.Create(_config.TessData, _config.Language, _config.EngineMode);
-        var result = tesseract.Process(pix);
+        var preprocessedPix = Preprocess(pix);
+        var engine = _engineFactory.Create();
+        var result = engine.Process(preprocessedPix);
         results.BlockingAdd(result);
       });
 
       return Task.FromResult<IRecognitionResults>(results);
+    }
+
+    private IPix Preprocess(IPix pix)
+    {
+      IPix result = null;
+      foreach (var preprocessor in _preprocessors)
+        result = preprocessor.Run(pix);
+      return result;
     }
   }
 }

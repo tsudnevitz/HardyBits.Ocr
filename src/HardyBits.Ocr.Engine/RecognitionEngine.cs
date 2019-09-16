@@ -11,6 +11,7 @@ using HardyBits.Wrappers.Leptonica.Pix;
 using HardyBits.Wrappers.Tesseract;
 using HardyBits.Wrappers.Tesseract.Constants;
 using HardyBits.Wrappers.Tesseract.Enums;
+using HardyBits.Wrappers.Tesseract.Factories;
 using HardyBits.Wrappers.Tesseract.Results;
 
 namespace HardyBits.Ocr.Engine
@@ -67,7 +68,7 @@ namespace HardyBits.Ocr.Engine
       return true;
     }
 
-    public async Task<IRecognitionResults> RecognizeAsync(IRecognitionConfiguration config, bool isAsync = true)
+    public async Task<IRecognitionResults> RecognizeAsync(IRecognitionConfiguration config, bool runParallel = true)
     {
       if (config == null)
         throw new ArgumentNullException(nameof(config));
