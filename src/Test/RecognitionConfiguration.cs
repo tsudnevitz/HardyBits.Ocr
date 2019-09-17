@@ -20,7 +20,7 @@ namespace HardyBits.Ocr.Samples.Console
         if (filePath == null)
           throw new ArgumentNullException(nameof(filePath));
 
-        Data = File.ReadAllBytes(@"Samples\sample_scanned.pdf");
+        Data = File.ReadAllBytes(filePath);
         Name = Path.GetFileNameWithoutExtension(filePath);
         Extension = Path.GetExtension(filePath);
       }

@@ -2,7 +2,7 @@
 
 namespace HardyBits.Wrappers.Tesseract.Results
 {
-  public interface IRecognitionResult : IDisposable
+  public interface ITesseractResult : IDisposable
   {
     string Text { get; }
     string HocrText { get; }

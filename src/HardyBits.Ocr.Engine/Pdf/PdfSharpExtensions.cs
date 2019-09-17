@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using HardyBits.Ocr.Engine.IO;
+using HardyBits.Ocr.Engine.Results;
 using HardyBits.Wrappers.Tesseract.Results;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Pdf.Advanced;
@@ -109,11 +110,7 @@ namespace HardyBits.Ocr.Engine.Pdf
       foreach (var page in document.Pages)
       {
         var pageTexts = page.ExtractText();
-        var result = new RecognitionResult
-        {
-          Confidence = 100,
-          Text = string.Join(string.Empty, pageTexts)
-        };
+        var result = new RecognitionResult(string.Join(string.Empty, pageTexts));
         results.Add(result);
       }
       return results;

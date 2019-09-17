@@ -1,6 +1,6 @@
 ﻿namespace HardyBits.Wrappers.Tesseract.Results
 {
-  public class RecognitionResult : IRecognitionResult
+  public class TesseractResult : ITesseractResult
   {
     public string Text { get; set; }
     public string HocrText { get; set; }

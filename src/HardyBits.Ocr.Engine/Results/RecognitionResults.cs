@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HardyBits.Wrappers.Tesseract.Results
+namespace HardyBits.Ocr.Engine.Results
 {
   public class RecognitionResults : List<IRecognitionResult>, IRecognitionResults
   {
-    private object _lock = new object();
+    private readonly object _lock = new object();
 
     public RecognitionResults(IEnumerable<IRecognitionResult> collection) : base(collection)
     {

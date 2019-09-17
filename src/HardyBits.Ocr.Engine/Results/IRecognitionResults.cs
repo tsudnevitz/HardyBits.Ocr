@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HardyBits.Wrappers.Tesseract.Results
+namespace HardyBits.Ocr.Engine.Results
 {
   public interface IRecognitionResults : IReadOnlyCollection<IRecognitionResult>
   {
