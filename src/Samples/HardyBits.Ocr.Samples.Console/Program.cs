@@ -1,66 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using HardyBits.Ocr.Engine;
-using HardyBits.Ocr.Engine.Configuration;
-using HardyBits.Wrappers.Tesseract.Enums;
 
 namespace HardyBits.Ocr.Samples.Console
 {
   public static class Program
   {
-    private class RecognitionConfiguration : IRecognitionConfiguration
-    {
-      private class ImageData : IImageData
-      {
-        public string Name { get; } = "sample_photo_1_side";
-        public string Extension { get; } = ".jpg";
-        public string MimeType { get; } = "image/jpeg";
-        public ReadOnlyMemory<byte> Data { get; } = File.ReadAllBytes(@"Samples\sample_scanned.pdf");
-      }
-
-      private class EngineConfiguration : IEngineConfiguration
-      {
-        public string Type { get; } = "tesseract4";
-        public IParameterCollection Parameters { get; } = new ParameterCollection
-        {
-          {"language", ParameterValue.Create("pol")},
-          {"mode", ParameterValue.Create("Default")},
-          {"tessdata", ParameterValue.Create($@"{Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}\libs\tessdata")}
-        };
-
-        public string TessData => Parameters.GetValue<string>("tessdata");
-        public EngineMode EngineMode => Parameters.GetValue<EngineMode>("mode");
-        public string Language => Parameters.GetValue<string>("language");
-      }
-
-      private class PreprocessorConfiguration : IPreprocessorConfiguration
-      {
-        public string Type { get; } = "HeavyLift";
-        public IParameterCollection Parameters { get; } = new ParameterCollection();
-      }
-
-      public RecognitionConfiguration()
-      {
-        Engine = new EngineConfiguration();
-        Image = new ImageData();
-        Preprocessors = Enumerable.Repeat(new PreprocessorConfiguration(), 1).ToArray();
-      }
-
-      public IImageData Image { get; }
-      public IEngineConfiguration Engine { get; }
-      public IReadOnlyCollection<IPreprocessorConfiguration> Preprocessors { get; }
-    }
-
     public static async Task Main()
     {
+      var config1 = new RecognitionConfiguration(@"Samples\sample_photo_1_side.jpg");
+      var config2 = new RecognitionConfiguration(@"Samples\sample_photo_2_side.jpg");
+
       using var engine = new ImageRecognitionEngine();
-      var config = new RecognitionConfiguration();
-      var task1 = engine.RecognizeAsync(config, runParallel: true);
-      var task2 = engine.RecognizeAsync(config, runParallel: true);
+      var task1 = engine.RecognizeAsync(config1, runParallel: true);
+      var task2 = engine.RecognizeAsync(config2, runParallel: true);
 
       var results = await Task.WhenAll(task1, task2);
       var result = results.SelectMany(x => x);
