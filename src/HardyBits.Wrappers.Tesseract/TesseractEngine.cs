@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using HardyBits.Wrappers.Leptonica.Pix;
+using HardyBits.Wrappers.Leptonica.Internals;
 using HardyBits.Wrappers.Tesseract.Constants;
 using HardyBits.Wrappers.Tesseract.Enums;
 using HardyBits.Wrappers.Tesseract.Exceptions;
@@ -40,7 +40,7 @@ namespace HardyBits.Wrappers.Tesseract
       throw new TesseractException("Failed to initialise tesseract engine.");
     }
 
-    public IRecognitionResult Process(IPix image)
+    public ITesseractResult Process(IPix image)
     {
       if (image == null) 
         throw new ArgumentNullException(nameof(image));
@@ -52,7 +52,7 @@ namespace HardyBits.Wrappers.Tesseract
       {
         const PageSegmentMode pageSegMode = PageSegmentMode.Auto;
         Tesseract4.TessBaseAPISetPageSegMode(_handle, (int) pageSegMode);
-        Tesseract4.TessBaseAPISetImage2(_handle, image.Handle);
+        Tesseract4.TessBaseAPISetImage2(_handle, image.HandleRef);
 
         if (Tesseract4.TessBaseAPIRecognize(_handle, out var rec) != 0)
           throw new TesseractException("Recognition of image failed.");
@@ -60,7 +60,7 @@ namespace HardyBits.Wrappers.Tesseract
         using var text = Text.Create(() => Tesseract4.TessBaseAPIGetUTF8Text(_handle));
         using var hocrText = Text.Create(() => Tesseract4.TessBaseAPIGetHOCRText(_handle, 0));
 
-        return new RecognitionResult 
+        return new TesseractResult 
         { 
           Text = text.ToString(),
           HocrText = $"{Tags.XhtmlBeginTag}{hocrText}{Tags.XhtmlEndTag}",

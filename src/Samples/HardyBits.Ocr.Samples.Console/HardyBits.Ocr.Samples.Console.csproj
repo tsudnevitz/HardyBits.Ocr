@@ -6,13 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\HardyBits.Ocr.Engine\HardyBits.Ocr.Engine.csproj" />
-    <ProjectReference Include="..\..\HardyBits.Wrappers.Leptonica\HardyBits.Wrappers.Leptonica.csproj" />
-    <ProjectReference Include="..\..\HardyBits.Wrappers.Tesseract\HardyBits.Wrappers.Tesseract.csproj" />
   </ItemGroup>
 
   <ItemGroup>

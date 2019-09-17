@@ -6,7 +6,6 @@ namespace HardyBits.Ocr.Engine.Configuration
   {
     string Name { get; }
     string Extension { get; }
-    string MimeType { get; }
     ReadOnlyMemory<byte> Data { get; }
   }
 }

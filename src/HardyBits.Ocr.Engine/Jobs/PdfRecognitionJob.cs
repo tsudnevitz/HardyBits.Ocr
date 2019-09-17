@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using HardyBits.Ocr.Engine.IO;
 using HardyBits.Ocr.Engine.Pdf;
-using HardyBits.Ocr.Engine.Preporcessing;
-using HardyBits.Wrappers.Leptonica.Pix;
+using HardyBits.Ocr.Engine.Preprocessing;
+using HardyBits.Ocr.Engine.Results;
+using HardyBits.Wrappers.Leptonica.Internals;
 using HardyBits.Wrappers.Tesseract.Factories;
 using HardyBits.Wrappers.Tesseract.Results;
 using PdfSharpCore.Pdf;
@@ -37,11 +38,11 @@ namespace HardyBits.Ocr.Engine.Jobs
       _pixFactory = pixFactory ?? throw new ArgumentNullException(nameof(pixFactory));
       _storage = storage ?? throw new ArgumentNullException(nameof(storage));
     }
-    public async Task<IRecognitionResults> ExecuteAsync()
+    public Task<IRecognitionResults> ExecuteAsync()
     {
       using var document = _pdfDocumentFactory.Open(_pdfFile.Path);
       if (document.ContainsText())
-        return document.ExtractText();
+        return Task.FromResult(document.ExtractText());
 
       var storedImages = ExtractImages(document);
       var pixes = storedImages.SelectMany(x => _pixFactory.Create(x.Path));
@@ -50,54 +51,56 @@ namespace HardyBits.Ocr.Engine.Jobs
       var options = new ParallelOptions{ MaxDegreeOfParallelism = 10 };
       Parallel.ForEach(pixes, options, pix =>
       {
-        var engine = _engineFactory.Create();
-        var result = engine.Process(pix);
-        results.BlockingAdd(result);
+        var preprocessedPix = Preprocess(pix);
+        using var engine = _engineFactory.Create();
+        var result = engine.Process(preprocessedPix);
+        var recognitionResult = new RecognitionResult(result);
+        results.BlockingAdd(recognitionResult);
       });
 
-      return results;
+      return Task.FromResult((IRecognitionResults) results);
     }
 
-    public IEnumerable<IStoredImageFile> ExtractImages(PdfDocument document)
+    private IPix Preprocess(IPix pix)
+    {
+      IPix result = null;
+      foreach (var preprocessor in _preprocessors)
+        result = preprocessor.Run(pix);
+      return result;
+    }
+
+    private IEnumerable<IStoredImageFile> ExtractImages(PdfDocument document)
     {
       var files = new List<IStoredImageFile>();
-      foreach (PdfPage page in document.Pages)
+      foreach (var page in document.Pages)
       {
-        // Get resources dictionary
-        PdfDictionary resources = page.Elements.GetDictionary("/Resources");
-        if (resources != null)
+        var resources = page.Elements.GetDictionary("/Resources");
+        var xObjects = resources?.Elements.GetDictionary("/XObject");
+        if (xObjects == null) 
+          continue;
+
+        var items = xObjects.Elements.Values;
+        foreach (var item in items)
         {
-          // Get external objects dictionary
-          PdfDictionary xObjects = resources.Elements.GetDictionary("/XObject");
-          if (xObjects != null)
-          {
-            ICollection<PdfItem> items = xObjects.Elements.Values;
-            // Iterate references to external objects
-            foreach (PdfItem item in items)
-            {
-              PdfReference reference = item as PdfReference;
-              if (reference != null)
-              {
-                PdfDictionary xObject = reference.Value as PdfDictionary;
-                // Is external object an image?
-                if (xObject != null && xObject.Elements.GetString("/Subtype") == "/Image")
-                {
-                  var image = ExportImage(xObject);
-                  if(image != null)
-                    files.Add(image);
-                }
-              }
-            }
-          }
+          if (!(item is PdfReference reference)) 
+            continue;
+
+          if (!(reference.Value is PdfDictionary xObject) ||
+              xObject.Elements.GetString("/Subtype") != "/Image") 
+            continue;
+
+          var image = ExportImage(xObject);
+          if(image != null)
+            files.Add(image);
         }
       }
 
       return files;
     }
 
-    public IStoredImageFile ExportImage(PdfDictionary image)
+    private IStoredImageFile ExportImage(PdfDictionary image)
     {
-      string filter = GetName(image.Elements, "/Filter");
+      var filter = GetName(image.Elements, "/Filter");
       switch (filter)
       {
         case "/DCTDecode":
@@ -109,16 +112,21 @@ namespace HardyBits.Ocr.Engine.Jobs
       }
     }
 
-    public string GetName(PdfDictionary.DictionaryElements dict, string key)
+    private static string GetName(PdfDictionary.DictionaryElements dict, string key)
     {
-      object obj = (object) dict[key];
+      var obj = (object) dict[key];
+
       if (obj == null)
         return string.Empty;
-      PdfReference pdfReference = obj as PdfReference;
-      if (pdfReference != null)
-        obj = (object) pdfReference.Value;
-      PdfName pdfName = obj as PdfName;
-      if (pdfName != (string) null)
+
+      if (obj is PdfReference pdfReference)
+        obj = pdfReference.Value;
+
+      var pdfName = obj as PdfName;
+
+      // do not change! hacky casting to string - there's a bug in PdfSharp
+      string nullString = null;
+      if (pdfName != nullString)
         return pdfName.Value;
 
       if (obj is PdfNameObject pdfNameObject)
@@ -127,10 +135,9 @@ namespace HardyBits.Ocr.Engine.Jobs
       return null;
     }
 
-    public IStoredImageFile ExportJpegImage(PdfDictionary image)
+    private IStoredImageFile ExportJpegImage(PdfDictionary image)
     {
-      // Fortunately JPEG has native support in PDF and exporting an image is just writing the stream to a file.
-      byte[] stream = image.Stream.Value;
+      var stream = image.Stream.Value;
       return _storage.StoreAsync(stream).Result;
     }
   }

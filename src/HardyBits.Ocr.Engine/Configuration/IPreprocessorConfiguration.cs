@@ -2,7 +2,7 @@
 
 namespace HardyBits.Ocr.Engine.Configuration
 {
-  public interface IPreprocessorConfiguration : IHaveType, IHaveMethod, IHaveParameters
+  public interface IPreprocessorConfiguration : IHaveType, IHaveParameters
   {
   }
 }

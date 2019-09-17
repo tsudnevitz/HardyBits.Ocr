@@ -96,5 +96,17 @@ namespace HardyBits.Wrappers.Leptonica.Imports
 
     [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(pixaWriteMultipageTiff))]
     public static extern int pixaWriteMultipageTiff(string fname, IntPtr pixa);
+    
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(boxaCreate))]
+    public static extern IntPtr boxaCreate(int n);
+    
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(boxaDestroy))]
+    public static extern void boxaDestroy(ref IntPtr pboxa);
+    
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(boxaAddBox))]
+    public static extern int boxaAddBox(IntPtr boxa, IntPtr box, int copyflag);
+
+    [DllImport(LibraryNames.Leptonica5, CallingConvention = CallingConvention.Cdecl, EntryPoint = nameof(boxDestroy))]
+    public static extern void boxDestroy(ref IntPtr pboxa);
   }
 }

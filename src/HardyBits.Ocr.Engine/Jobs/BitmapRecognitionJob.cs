@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using HardyBits.Ocr.Engine.IO;
-using HardyBits.Ocr.Engine.Preporcessing;
-using HardyBits.Wrappers.Leptonica.Pix;
+using HardyBits.Ocr.Engine.Preprocessing;
+using HardyBits.Ocr.Engine.Results;
+using HardyBits.Wrappers.Leptonica.Internals;
 using HardyBits.Wrappers.Tesseract.Factories;
 using HardyBits.Wrappers.Tesseract.Results;
 
@@ -35,9 +36,10 @@ namespace HardyBits.Ocr.Engine.Jobs
       Parallel.ForEach(pixes, options, pix =>
       {
         var preprocessedPix = Preprocess(pix);
-        var engine = _engineFactory.Create();
+        using var engine = _engineFactory.Create();
         var result = engine.Process(preprocessedPix);
-        results.BlockingAdd(result);
+        var recognitionResult = new RecognitionResult(result);
+        results.BlockingAdd(recognitionResult);
       });
 
       return Task.FromResult<IRecognitionResults>(results);

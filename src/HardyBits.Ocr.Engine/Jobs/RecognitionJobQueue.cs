@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using HardyBits.Ocr.Engine.Results;
 using HardyBits.Wrappers.Tesseract.Results;
 
 namespace HardyBits.Ocr.Engine.Jobs

@@ -5,8 +5,10 @@ using HardyBits.Ocr.Engine.Configuration;
 using HardyBits.Ocr.Engine.IO;
 using HardyBits.Ocr.Engine.Jobs;
 using HardyBits.Ocr.Engine.Pdf;
-using HardyBits.Ocr.Engine.Preporcessing;
-using HardyBits.Wrappers.Leptonica.Pix;
+using HardyBits.Ocr.Engine.Preprocessing;
+using HardyBits.Ocr.Engine.Results;
+using HardyBits.Wrappers.Leptonica.Internals;
+using HardyBits.Wrappers.Tesseract.Enums;
 using HardyBits.Wrappers.Tesseract.Factories;
 using HardyBits.Wrappers.Tesseract.Results;
 
@@ -63,7 +65,7 @@ namespace HardyBits.Ocr.Engine
       if (type == ImageFileTypes.Unrecognized)
         throw new InvalidOperationException("Image file type not recognized.");
 
-      var tesseractFactory = _tesseractFactory.CreateFactory(config.Engine.TessData, config.Engine.Language, config.Engine.EngineMode);
+      var tesseractFactory = _tesseractFactory.CreateFactory(config.Engine.TessData, config.Engine.Language, (EngineMode) config.Engine.EngineMode);
       var preprocessors = config.Preprocessors.Select(x => _preprocessorFactory.Create(x)).ToArray();
       using var storedFile = await _storage.StoreAsync(config.Image);
 
@@ -74,9 +76,9 @@ namespace HardyBits.Ocr.Engine
       return await job.ExecuteAsync();
     }
 
-    public IRecognitionResults Recognize(IRecognitionConfiguration config, bool isAsync = true)
+    public IRecognitionResults Recognize(IRecognitionConfiguration config, bool runParallel = true)
     {
-      return RecognizeAsync(config, isAsync)
+      return RecognizeAsync(config, runParallel)
         .ConfigureAwait(false)
         .GetAwaiter()
         .GetResult();

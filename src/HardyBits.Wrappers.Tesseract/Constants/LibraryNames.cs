@@ -2,6 +2,6 @@
 {
   internal static class LibraryNames
   {
-    public const string Tesseract4 = "libs/win-x64/libtesseract-4";
+    public const string Tesseract4 = "runtimes/win-x64/native/libtesseract-4";
   }
 }
