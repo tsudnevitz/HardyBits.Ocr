@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using HardyBits.Wrappers.Leptonica.Extensions;
 using HardyBits.Wrappers.Leptonica.Imports;
 
 namespace HardyBits.Wrappers.Leptonica.Internals
 {
-  public class Pixa : IDisposable
+  internal class Pixa : LeptonicaObjectBase, IPixa
   {
     public Pixa(int initialPointersCount = 0)
+      : base(() => Leptonica5Pix.pixaCreate(initialPointersCount))
     {
-      HandleRef = Leptonica5Pix.pixaCreate(initialPointersCount).GetHandleOrThrow(this);
     }
-
-    public HandleRef HandleRef { get; private set; }
-
+    
     public void AddPix(IPix pix)
     {
       if (pix == null)
@@ -29,25 +25,6 @@ namespace HardyBits.Wrappers.Leptonica.Internals
         throw new InvalidOperationException("Leptonica failed.");
     }
 
-    private void ReleaseUnmanagedResources()
-    {
-      if (HandleRef.Handle == IntPtr.Zero)
-        return;
-
-      var pointer = HandleRef.Handle;
-      HandleRef = new HandleRef();
-      Leptonica5Pix.pixaDestroy(ref pointer);
-    }
-
-    public void Dispose()
-    {
-      ReleaseUnmanagedResources();
-      GC.SuppressFinalize(this);
-    }
-
-    ~Pixa()
-    {
-      ReleaseUnmanagedResources();
-    }
+    protected override void DestroyObject(ref IntPtr pointer) => Leptonica5Pix.pixaDestroy(ref pointer);
   }
 }

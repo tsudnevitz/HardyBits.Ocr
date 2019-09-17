@@ -8,6 +8,11 @@ namespace HardyBits.Ocr.Engine.Configuration
   [DebuggerStepThrough]
   public class ParameterCollection : Dictionary<string, IParameterValue>, IParameterCollection
   {
+    public ParameterCollection() 
+      : base(StringComparer.InvariantCultureIgnoreCase)
+    {
+    }
+
     public bool TryGetValue<T>(string key, out T value)
     {
       if (key == null)
@@ -39,7 +44,7 @@ namespace HardyBits.Ocr.Engine.Configuration
     public T GetValue<T>(string key)
     {
       if (!TryGetValue(key, out T value))
-        throw new KeyNotFoundException($"Key '{key}' not found or of invalid type.");
+        throw new KeyNotFoundException($"Key '{key}' not found or is of invalid type.");
 
       return value;
     }

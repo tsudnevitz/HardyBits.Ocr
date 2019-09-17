@@ -3,7 +3,7 @@ using HardyBits.Wrappers.Leptonica.Imports;
 
 namespace HardyBits.Wrappers.Leptonica.Internals
 {
-  internal class Boxa : LeptonicaObjectBase
+  internal class Boxa : LeptonicaObjectBase, IBoxa
   {
     public Boxa(int initialPointersCount = 0)
      : base(() => Leptonica5Pix.boxaCreate(initialPointersCount))

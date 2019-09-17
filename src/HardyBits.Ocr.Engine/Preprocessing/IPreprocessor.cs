@@ -1,9 +1,8 @@
-﻿using HardyBits.Ocr.Engine.Common;
-using HardyBits.Wrappers.Leptonica.Internals;
+﻿using HardyBits.Wrappers.Leptonica.Internals;
 
 namespace HardyBits.Ocr.Engine.Preprocessing
 {
-  public interface IPreprocessor : IHaveType
+  public interface IPreprocessor
   {
     IPix Run(IPix image);
   }

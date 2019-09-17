@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardyBits.Ocr.Api", "HardyBits.Ocr.Api\HardyBits.Ocr.Api.csproj", "{8D190A16-7674-44A5-8ECF-79FA33754077}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardyBits.Ocr.Engine", "HardyBits.Ocr.Engine\HardyBits.Ocr.Engine.csproj", "{97C6713C-835B-4D42-B6A5-D5768E2C4885}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardyBits.Wrappers.Leptonica", "HardyBits.Wrappers.Leptonica\HardyBits.Wrappers.Leptonica.csproj", "{1027FAAC-9696-4B6E-9993-84D123DBF929}"
@@ -17,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardyBits.Ocr.Samples.Conso
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{75FE2811-B00F-4876-9940-B59C149DB61D}"
 	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
-		LICENSE = LICENSE
-		README.md = README.md
+		..\.gitignore = ..\.gitignore
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{59214F7E-99C4-4BA9-9AB2-F47F42474267}"
@@ -30,10 +28,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8D190A16-7674-44A5-8ECF-79FA33754077}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D190A16-7674-44A5-8ECF-79FA33754077}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D190A16-7674-44A5-8ECF-79FA33754077}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D190A16-7674-44A5-8ECF-79FA33754077}.Release|Any CPU.Build.0 = Release|Any CPU
 		{97C6713C-835B-4D42-B6A5-D5768E2C4885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{97C6713C-835B-4D42-B6A5-D5768E2C4885}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97C6713C-835B-4D42-B6A5-D5768E2C4885}.Release|Any CPU.ActiveCfg = Release|Any CPU

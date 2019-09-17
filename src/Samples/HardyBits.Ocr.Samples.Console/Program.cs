@@ -59,7 +59,11 @@ namespace HardyBits.Ocr.Samples.Console
     {
       using var engine = new ImageRecognitionEngine();
       var config = new RecognitionConfiguration();
-      var result = await engine.RecognizeAsync(config, runParallel: false);
+      var task1 = engine.RecognizeAsync(config, runParallel: true);
+      var task2 = engine.RecognizeAsync(config, runParallel: true);
+
+      var results = await Task.WhenAll(task1, task2);
+      var result = results.SelectMany(x => x);
 
       foreach (var page in result)
         System.Console.WriteLine(page.Text);

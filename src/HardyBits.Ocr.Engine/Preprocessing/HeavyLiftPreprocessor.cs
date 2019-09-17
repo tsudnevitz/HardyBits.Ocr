@@ -1,31 +1,35 @@
 ﻿using System;
+using HardyBits.Ocr.Engine.Configuration;
 using HardyBits.Wrappers.Leptonica.Enums;
 using HardyBits.Wrappers.Leptonica.Internals;
 using HardyBits.Wrappers.Leptonica.Interop;
 
 namespace HardyBits.Ocr.Engine.Preprocessing
 {
-  public class HeavyLiftPreprocessor : IPreprocessor
+  public class HeavyLiftPreprocessor : PreprocessorBase<PreprocessorManifest<HeavyLiftPreprocessor>>
   {
-    private readonly ILeptonicaInterop _leptonicaInterop;
-
-    public HeavyLiftPreprocessor(ILeptonicaInterop leptonicaInterop)
+    public HeavyLiftPreprocessor(ILeptonicaInterop leptonicaInterop, IParameterCollection parameters)
+      : base(leptonicaInterop, parameters)
     {
-      _leptonicaInterop = leptonicaInterop ?? throw new ArgumentNullException(nameof(leptonicaInterop));
     }
 
-    public string Type { get; } = "HeavyLift";
+    private DeskewReductionFactor ReductionFactor => GetParameterOrDefault(DeskewReductionFactor.Default);
+    private float MinUpConfidence => GetParameterOrDefault(4f);
+    private float MinRatio => GetParameterOrDefault(2.5f);
+    private int Threshold => GetParameterOrDefault(128);
+    private int MinDistance => GetParameterOrDefault(50);
+    private int EraseDistance => GetParameterOrDefault(70);
 
-    public IPix Run(IPix image)
+    public override IPix Run(IPix image)
     {
       if (image == null)
         throw new ArgumentNullException(nameof(image));
 
-      using var deskewedPix = _leptonicaInterop.DeskewBoth(image, DeskewReductionFactor.Default);
-      using var oneBitPix = _leptonicaInterop.PrepareOneBitPerPixel(deskewedPix);
-      using var correctedPix = _leptonicaInterop.OrientationCorrect(oneBitPix);
-      using var foregroundBox = _leptonicaInterop.FindPageForeground(correctedPix);
-      return _leptonicaInterop.ClipRectangle(correctedPix, foregroundBox);
+      using var deskewedPix = leptonicaInterop.DeskewBoth(image, ReductionFactor);
+      using var oneBitPix = leptonicaInterop.PrepareOneBitPerPixel(deskewedPix);
+      using var correctedPix = leptonicaInterop.OrientationCorrect(oneBitPix, MinUpConfidence, MinRatio);
+      using var foregroundBox = leptonicaInterop.FindPageForeground(correctedPix, Threshold, MinDistance, EraseDistance);
+      return leptonicaInterop.ClipRectangle(correctedPix, foregroundBox);
     }
   }
 }
