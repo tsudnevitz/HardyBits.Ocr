@@ -60,6 +60,10 @@ namespace HardyBits.Ocr.Samples.Console
       Preprocessors = Enumerable.Repeat(new PreprocessorConfiguration(), 1).ToArray();
     }
 
+    public RecognitionConfiguration()
+    {
+    }
+
     public IFileConfiguration File { get; }
     public IEngineConfiguration Engine { get; }
     public IReadOnlyCollection<IPreprocessorConfiguration> Preprocessors { get; }
