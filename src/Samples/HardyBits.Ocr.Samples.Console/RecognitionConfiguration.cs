@@ -9,20 +9,26 @@ namespace HardyBits.Ocr.Samples.Console
 {
   internal class RecognitionConfiguration : IRecognitionConfiguration
   {
-    private class ImageData : IImageData
+    private class FileConfiguration : IFileConfiguration
     {
       public string Name { get; }
       public string Extension { get; }
-      public ReadOnlyMemory<byte> Data { get; }
+      public Stream DataStream { get; }
+      public bool DisposeStream { get; } = true;
 
-      public ImageData(string filePath)
+      public FileConfiguration(string filePath)
       {
         if (filePath == null)
           throw new ArgumentNullException(nameof(filePath));
 
-        Data = File.ReadAllBytes(@"Samples\sample_scanned.pdf");
+        DataStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
         Name = Path.GetFileNameWithoutExtension(filePath);
         Extension = Path.GetExtension(filePath);
+      }
+
+      public void Dispose()
+      {
+        // does nothing
       }
     }
 
@@ -50,11 +56,11 @@ namespace HardyBits.Ocr.Samples.Console
     public RecognitionConfiguration(string filePath)
     {
       Engine = new EngineConfiguration();
-      Image = new ImageData(filePath);
+      File = new FileConfiguration(filePath);
       Preprocessors = Enumerable.Repeat(new PreprocessorConfiguration(), 1).ToArray();
     }
 
-    public IImageData Image { get; }
+    public IFileConfiguration File { get; }
     public IEngineConfiguration Engine { get; }
     public IReadOnlyCollection<IPreprocessorConfiguration> Preprocessors { get; }
   }

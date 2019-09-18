@@ -12,11 +12,10 @@ namespace HardyBits.Ocr.Samples.Console
       var config2 = new RecognitionConfiguration(@"Samples\sample_photo_2_side.jpg");
 
       using var engine = new ImageRecognitionEngine();
-      var task1 = engine.RecognizeAsync(config1, runParallel: true);
-      var task2 = engine.RecognizeAsync(config2, runParallel: true);
+      var result = await engine.RecognizeAsync(config1, runParallel: false);
 
-      var results = await Task.WhenAll(task1, task2);
-      var result = results.SelectMany(x => x);
+      //var result = await task1;//Task.WhenAll(task1, task2);
+      //var result = results.SelectMany(x => x);
 
       foreach (var page in result)
         System.Console.WriteLine(page.Text);

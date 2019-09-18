@@ -1,9 +1,10 @@
-﻿using System;
+﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace HardyBits.Ocr.Engine.IO
 {
   internal interface IImageFileTypeRecognizer
   {
-    ImageFileTypes GetFileType(ReadOnlyMemory<byte> imageData);
+    Task<ImageFileTypes> GetFileTypeAsync(Stream stream);
   }
 }

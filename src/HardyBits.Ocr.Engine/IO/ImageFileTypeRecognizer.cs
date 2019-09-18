@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using HardyBits.Wrappers.Leptonica.Enums;
 using HardyBits.Wrappers.Leptonica.Internals;
 
@@ -15,12 +17,18 @@ namespace HardyBits.Ocr.Engine.IO
       _pixHelper = pixHelper ?? throw new ArgumentNullException(nameof(pixHelper));
     }
 
-    public ImageFileTypes GetFileType(ReadOnlyMemory<byte> imageData)
+    public async Task<ImageFileTypes> GetFileTypeAsync(Stream stream)
     {
-      return CheckPdfType(imageData) ? ImageFileTypes.Pdf : GetImageType(imageData);
+      stream.Position = 0;
+      var buffer = new byte[1024];
+      var bytesRead = await stream.ReadAsync(buffer, 0, 1024);
+
+      return CheckPdfType(buffer.AsSpan(0, bytesRead)) 
+        ? ImageFileTypes.Pdf 
+        : GetImageType(buffer.AsSpan(0, 12));
     }
 
-    private ImageFileTypes GetImageType(in ReadOnlyMemory<byte> imageData)
+    private ImageFileTypes GetImageType(ReadOnlySpan<byte> imageData)
     {
       var format = _pixHelper.GetFileFormat(imageData);
 
@@ -51,18 +59,15 @@ namespace HardyBits.Ocr.Engine.IO
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static unsafe bool CheckPdfType(in ReadOnlyMemory<byte> imageData)
+    private static unsafe bool CheckPdfType(ReadOnlySpan<byte> imageData)
     {
-      var bytesLength = imageData.Length < 1024 ? imageData.Length : 1024;
-      var headerBytes = imageData.Slice(0, bytesLength).Span;
-
-      fixed (byte* firstByte = &headerBytes.GetPinnableReference())
+      fixed (byte* firstByte = imageData)
       {
-        var ansiHeader = Encoding.ASCII.GetString(firstByte, bytesLength);
+        var ansiHeader = Encoding.ASCII.GetString(firstByte, imageData.Length);
         if (ansiHeader.Contains("%PDF"))
           return true;
 
-        var utfHeader = Encoding.UTF8.GetString(firstByte, bytesLength);
+        var utfHeader = Encoding.UTF8.GetString(firstByte, imageData.Length);
         if (utfHeader.Contains("%PDF"))
           return true;
       }

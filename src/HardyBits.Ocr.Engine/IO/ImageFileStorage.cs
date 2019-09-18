@@ -2,27 +2,31 @@
 using System.IO;
 using System.Threading.Tasks;
 using HardyBits.Ocr.Engine.Configuration;
+using HardyBits.Ocr.Engine.Extensions;
 
 namespace HardyBits.Ocr.Engine.IO
 {
   public class ImageFileStorage : IImageFileStorage
   {
-    public async Task<IStoredImageFile> StoreAsync(ReadOnlyMemory<byte> data)
+    public async ValueTask<IStoredImageFile> StoreAsync(IFileConfiguration fileConfiguration)
     {
       var tmpFilePath = Path.GetTempFileName();
-      await using var stream = new FileStream(tmpFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete | FileShare.Inheritable, 4096, FileOptions.Asynchronous);
-      await stream.WriteAsync(data);
+      using var stream = new FileStream(tmpFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete | FileShare.Inheritable, 4096, FileOptions.Asynchronous);
 
-      return new StoredImageFile(tmpFilePath);
+      fileConfiguration.DataStream.Position = 0;
+      await fileConfiguration.DataStream.CopyToAsync(stream);
+
+      return new StoredImageFile(tmpFilePath, fileConfiguration.Name, fileConfiguration.Extension);
     }
 
-    public async Task<IStoredImageFile> StoreAsync(IImageData imageData)
+    public async ValueTask<IStoredImageFile> StoreAsync(ReadOnlyMemory<byte> memory)
     {
       var tmpFilePath = Path.GetTempFileName();
-      await using var stream = new FileStream(tmpFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete | FileShare.Inheritable, 4096, FileOptions.Asynchronous);
-      await stream.WriteAsync(imageData.Data);
+      using var stream = new FileStream(tmpFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete | FileShare.Inheritable, 4096, FileOptions.Asynchronous);
 
-      return new StoredImageFile(tmpFilePath, imageData.Name, imageData.Extension);
+      await stream.WriteAsync(memory);
+
+      return new StoredImageFile(tmpFilePath);
     }
 
     public IStoredImageFile Wrap(string path)

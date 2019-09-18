@@ -1,5 +1,6 @@
 ﻿using System;
 using HardyBits.Ocr.Engine.Configuration;
+using HardyBits.Ocr.Engine.Extensions;
 using HardyBits.Wrappers.Leptonica.Enums;
 using HardyBits.Wrappers.Leptonica.Internals;
 using HardyBits.Wrappers.Leptonica.Interop;
@@ -25,11 +26,15 @@ namespace HardyBits.Ocr.Engine.Preprocessing
       if (image == null)
         throw new ArgumentNullException(nameof(image));
 
-      using var deskewedPix = leptonicaInterop.DeskewBoth(image, ReductionFactor);
-      using var oneBitPix = leptonicaInterop.PrepareOneBitPerPixel(deskewedPix);
-      using var correctedPix = leptonicaInterop.OrientationCorrect(oneBitPix, MinUpConfidence, MinRatio);
-      using var foregroundBox = leptonicaInterop.FindPageForeground(correctedPix, Threshold, MinDistance, EraseDistance);
-      return leptonicaInterop.ClipRectangle(correctedPix, foregroundBox);
+      return image
+        .ChainOutput(x => leptonicaInterop.DeskewBoth(x, ReductionFactor), disposePreviousPix: false)
+        .ChainOutput(x => leptonicaInterop.PrepareOneBitPerPixel(x))
+        .ChainOutput(x => leptonicaInterop.OrientationCorrect(x, MinUpConfidence, MinRatio))
+        .ChainOutput(x =>
+        {
+          using var box = leptonicaInterop.FindPageForeground(x, Threshold, MinDistance, EraseDistance);
+          return leptonicaInterop.ClipRectangle(x, box);
+        });
     }
   }
 }
