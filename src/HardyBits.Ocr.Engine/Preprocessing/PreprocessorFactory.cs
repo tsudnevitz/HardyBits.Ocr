@@ -42,7 +42,7 @@ namespace HardyBits.Ocr.Engine.Preprocessing
       throw new ApplicationException($"Preprocessor {config.Type} not found.");
     }
 
-    private static IManifest GetManifest(Type preprocessorType)
+    public static IManifest GetManifest(Type preprocessorType)
     {
       var baseType = GetPreprocessorBaseType(preprocessorType.BaseType);
       var manifestType = baseType.GetGenericArguments()[0];

@@ -2,7 +2,7 @@
 
 namespace HardyBits.Ocr.Engine.Configuration
 {
-  public interface IEngineConfiguration : IHaveType, IHaveParameters
+  public interface IEngineConfiguration
   {
     string TessData { get; }
     int EngineMode { get; }
