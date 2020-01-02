@@ -6,8 +6,8 @@ namespace HardyBits.Ocr.Engine.IO
 {
   public interface IImageFileStorage
   {
-    Task<IStoredImageFile> StoreAsync(ReadOnlyMemory<byte> data);
-    Task<IStoredImageFile> StoreAsync(IImageData imageData);
+    ValueTask<IStoredImageFile> StoreAsync(IFileConfiguration fileConfiguration);
+    ValueTask<IStoredImageFile> StoreAsync(ReadOnlyMemory<byte> memory);
     IStoredImageFile Wrap(string path);
   }
 }

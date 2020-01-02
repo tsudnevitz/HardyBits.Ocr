@@ -8,7 +8,6 @@ using HardyBits.Ocr.Engine.Preprocessing;
 using HardyBits.Ocr.Engine.Results;
 using HardyBits.Wrappers.Leptonica.Internals;
 using HardyBits.Wrappers.Tesseract.Factories;
-using HardyBits.Wrappers.Tesseract.Results;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Pdf.Advanced;
 
@@ -48,14 +47,19 @@ namespace HardyBits.Ocr.Engine.Jobs
       var pixes = storedImages.SelectMany(x => _pixFactory.Create(x.Path));
 
       var results = new RecognitionResults();
-      var options = new ParallelOptions{ MaxDegreeOfParallelism = 10 };
+      var options = new ParallelOptions { MaxDegreeOfParallelism = 10 };
       Parallel.ForEach(pixes, options, pix =>
       {
-        var preprocessedPix = Preprocess(pix);
-        using var engine = _engineFactory.Create();
-        var result = engine.Process(preprocessedPix);
-        var recognitionResult = new RecognitionResult(result);
-        results.BlockingAdd(recognitionResult);
+        IPix preprocessedPix;
+        using (pix) preprocessedPix = Preprocess(pix);
+
+        using (preprocessedPix)
+        {
+          using var engine = _engineFactory.Create();
+          var result = engine.Process(preprocessedPix);
+          var recognitionResult = new RecognitionResult(result);
+          results.BlockingAdd(recognitionResult);
+        }
       });
 
       return Task.FromResult((IRecognitionResults) results);
@@ -137,8 +141,8 @@ namespace HardyBits.Ocr.Engine.Jobs
 
     private IStoredImageFile ExportJpegImage(PdfDictionary image)
     {
-      var stream = image.Stream.Value;
-      return _storage.StoreAsync(stream).Result;
+      var bytes = image.Stream.Value;
+      return _storage.StoreAsync(bytes).Result;
     }
   }
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using HardyBits.Ocr.Engine.Extensions;
 using HardyBits.Ocr.Engine.IO;
 using HardyBits.Ocr.Engine.Results;
-using HardyBits.Wrappers.Tesseract.Results;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Pdf.Advanced;
 using PdfSharpCore.Pdf.Content;
@@ -60,7 +60,7 @@ namespace HardyBits.Ocr.Engine.Pdf
         return null;
 
       var path = Path.GetTempPath();
-      await using var fileStream = new FileStream(path, FileMode.Create);
+      using var fileStream = new FileStream(path, FileMode.Create);
       await fileStream.WriteAsync(image.Stream.Value.AsMemory());
       return path;
     }

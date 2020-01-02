@@ -10,7 +10,6 @@ using HardyBits.Ocr.Engine.Results;
 using HardyBits.Wrappers.Leptonica.Internals;
 using HardyBits.Wrappers.Tesseract.Enums;
 using HardyBits.Wrappers.Tesseract.Factories;
-using HardyBits.Wrappers.Tesseract.Results;
 
 namespace HardyBits.Ocr.Engine
 {
@@ -61,13 +60,16 @@ namespace HardyBits.Ocr.Engine
       if (config == null)
         throw new ArgumentNullException(nameof(config));
 
-      var type = _recognizer.GetFileType(config.Image.Data);
+      var type = await _recognizer.GetFileTypeAsync(config.File.DataStream);
       if (type == ImageFileTypes.Unrecognized)
         throw new InvalidOperationException("Image file type not recognized.");
 
       var tesseractFactory = _tesseractFactory.CreateFactory(config.Engine.TessData, config.Engine.Language, (EngineMode) config.Engine.EngineMode);
       var preprocessors = config.Preprocessors.Select(x => _preprocessorFactory.Create(x)).ToArray();
-      using var storedFile = await _storage.StoreAsync(config.Image);
+      using var storedFile = await _storage.StoreAsync(config.File);
+
+      if (config.File.DisposeStream)
+        config.File.DataStream.Dispose();
 
       var job = _jobFactory.Create(type, storedFile, tesseractFactory, preprocessors);
 

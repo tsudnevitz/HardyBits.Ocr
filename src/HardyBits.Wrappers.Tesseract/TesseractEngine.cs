@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using HardyBits.Wrappers.Leptonica.Internals;
@@ -29,6 +32,14 @@ namespace HardyBits.Wrappers.Tesseract
       dataPath = dataPath.Trim();
       if (dataPath.EndsWith("\\", StringComparison.Ordinal) || dataPath.EndsWith("/", StringComparison.Ordinal))
         dataPath = dataPath.Substring(0, dataPath.Length - 1);
+
+      if (!Directory.Exists(dataPath))
+      {
+        if (Debugger.IsAttached)
+          dataPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? Directory.GetCurrentDirectory(), dataPath);
+        else
+          throw new TesseractException($"Tesseract data path does not exists. Current directory: {Directory.GetCurrentDirectory()}. Supplied data path: {dataPath}.");
+      }
 
       _handle = new HandleRef(this, Tesseract4.TessBaseAPICreate());
       if (Tesseract4.TessBaseAPIInit2(_handle, dataPath, language, (int) engineMode) == 0) 
